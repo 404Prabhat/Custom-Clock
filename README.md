@@ -81,3 +81,5 @@ This will open the project in your browser, and everything will work correctly.
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+"# Custom-Clock"  git init git add README.md git commit -m "second commit" git branch -M main git remote add origin git@github.com:404Prabhat/Custom-Clock.git git push -u origin main
+"# Custom-Clock" 
