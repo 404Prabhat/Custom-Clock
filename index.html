@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Custom Clock</title>
+    <meta name="description" content="A fully customizable clock and screensaver web app that works offline.">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <link id="google-font-time" rel="stylesheet">
+    <link id="google-font-date" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600&family=VT323&family=Share+Tech+Mono&display=swap">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="background-canvas"></canvas>
+    <div id="app-container">
+        <div id="clock-wrapper">
+            <div id="time-display">
+                <span id="hours">00</span>:<span id="minutes">00</span><span id="seconds-display">:00</span><span id="am-pm"></span>
+            </div>
+            <div id="date-display"></div>
+        </div>
+    </div>
+
+    <div id="settings-button">⚙️</div>
+
+    <div id="settings-panel">
+        <div class="panel-header">
+            <button class="panel-back-button" style="visibility: hidden;">←</button>
+            <h3 class="panel-title">Settings</h3>
+        </div>
+        <div class="panel-content">
+            <!-- Page 1: Main Settings -->
+            <div id="page-main" class="panel-page active">
+                <div class="setting-item" data-target="page-themes"><span>Themes</span><span class="arrow">›</span></div>
+                <div class="setting-item" data-target="page-preferences"><span>Preferences</span><span class="arrow">›</span></div>
+                <div class="setting-item" data-action="toggle-lock">
+                    <span>Lock Layout</span>
+                    <div id="lock-toggle" class="toggle-switch"><div class="knob"></div></div>
+                </div>
+            </div>
+
+            <!-- Page 2: Themes -->
+            <div id="page-themes" class="panel-page">
+                <div class="setting-item" data-action="set-theme" data-value="light">Light Theme</div>
+                <div class="setting-item" data-action="set-theme" data-value="dark">Dark Theme</div>
+                <div class="setting-item" data-target="page-render-themes"><span>Custom Animations</span><span class="arrow">›</span></div>
+                <div class="setting-item" data-target="page-custom-theme"><span>Custom Background Image</span><span class="arrow">›</span></div>
+            </div>
+
+            <!-- Page 3: Render Themes (NOW CUSTOM ANIMATIONS) -->
+            <div id="page-render-themes" class="panel-page">
+                <div class="setting-item" data-action="set-animation" data-value="none">None</div>
+                <div class="menu-title">Clock-Based</div>
+                <div class="setting-item" data-action="set-animation" data-value="orbital">Orbital</div>
+                <div class="setting-item" data-action="set-animation" data-value="glitch-matrix">Glitch Matrix</div>
+                <div class="setting-item" data-action="set-animation" data-value="ascii-art">ASCII Art</div>
+                <div class="setting-item" data-action="set-animation" data-value="word-clock">Word Clock</div>
+                <div class="setting-item" data-action="set-animation" data-value="sundial">Sundial</div>
+                <div class="menu-title">Particles & Physics</div>
+                <div class="setting-item" data-action="set-animation" data-value="particle-system">Particle System</div>
+                <div class="setting-item" data-action="set-animation" data-value="starfield">Starfield</div>
+                <div class="setting-item" data-action="set-animation" data-value="fireworks">Fireworks</div>
+                <div class="setting-item" data-action="set-animation" data-value="fluid-simulation">Fluid Simulation</div>
+                <div class="setting-item" data-action="set-animation" data-value="smoke-trails">Smoke Trails</div>
+                <div class="setting-item" data-action="set-animation" data-value="spiral-galaxy">Spiral Galaxy</div>
+                <div class="setting-item" data-action="set-animation" data-value="glowing-particles">Glowing Particles</div>
+                <div class="setting-item" data-action="set-animation" data-value="interactive-dots">Interactive Dots</div>
+                <div class="setting-item" data-action="set-animation" data-value="metaballs">Metaballs</div>
+                <div class="setting-item" data-action="set-animation" data-value="bouncing-dvd">Bouncing DVD</div>
+                <div class="setting-item" data-action="set-animation" data-value="rain-on-window">Rain on Window</div>
+                <div class="menu-title">Generative & Mathematical</div>
+                <div class="setting-item" data-action="set-animation" data-value="fractal-tree">Fractal Tree</div>
+                <div class="setting-item" data-action="set-animation" data-value="mandelbrot-set">Mandelbrot Set</div>
+                <div class="setting-item" data-action="set-animation" data-value="recursive-patterns">Recursive Patterns</div>
+                <div class="setting-item" data-action="set-animation" data-value="voronoi">Voronoi Diagram</div>
+                <div class="setting-item" data-action="set-animation" data-value="perlin-field">Perlin Noise Field</div>
+                <div class="setting-item" data-action="set-animation" data-value="lissajous-curves">Lissajous Curves</div>
+                <div class="setting-item" data-action="set-animation" data-value="turing-pattern">Turing Pattern</div>
+                <div class="setting-item" data-action="set-animation" data-value="game-of-life">Game of Life</div>
+                <div class="setting-item" data-action="set-animation" data-value="phyllotaxis">Phyllotaxis</div>
+                <div class="setting-item" data-action="set-animation" data-value="maze-generator">Maze Generator</div>
+                <div class="menu-title">Tech & Retro</div>
+                <div class="setting-item" data-action="set-animation" data-value="digital-rain">Digital Rain</div>
+                <div class="setting-item" data-action="set-animation" data-value="code-rain">Code Rain</div>
+                <div class="setting-item" data-action="set-animation" data-value="neon-grid">Neon Grid</div>
+                <div class="setting-item" data-action="set-animation" data-value="waveform-animation">Waveform Animation</div>
+                <div class="setting-item" data-action="set-animation" data-value="audio-visualizer">Audio Visualizer</div>
+                <div class="setting-item" data-action="set-animation" data-value="lightning-effect">Lightning Effect</div>
+                <div class="setting-item" data-action="set-animation" data-value="blueprint">Blueprint Grid</div>
+                <div class="setting-item" data-action="set-animation" data-value="sonar-sweep">Sonar Sweep</div>
+                <div class="setting-item" data-action="set-animation" data-value="circuit-board">Circuit Board</div>
+                <div class="setting-item" data-action="set-animation" data-value="halftone">Halftone Dots</div>
+                <div class="setting-item" data-action="set-animation" data-value="warp-drive">Warp Drive</div>
+                <div class="menu-title">Artistic & Organic</div>
+                <div class="setting-item" data-action="set-animation" data-value="aurora-borealis">Aurora Borealis</div>
+                <div class="setting-item" data-action="set-animation" data-value="caustic-light">Caustic Light</div>
+                <div class="setting-item" data-action="set-animation" data-value="blooming-flowers">Blooming Flowers</div>
+                <div class="setting-item" data-action="set-animation" data-value="ink-bleed">Ink Bleed</div>
+                <div class="setting-item" data-action="set-animation" data-value="stained-glass">Stained Glass</div>
+                <div class="setting-item" data-action="set-animation" data-value="kaleidoscope">Kaleidoscope</div>
+                <div class="setting-item" data-action="set-animation" data-value="light-pen">Light Pen</div>
+                <div class="setting-item" data-action="set-animation" data-value="confetti">Confetti</div>
+                <div class="setting-item" data-action="set-animation" data-value="hyperspace">Hyperspace Jump</div>
+                <div class="setting-item" data-action="set-animation" data-value="terrain-flyover">3D Terrain Flyover</div>
+            </div>
+
+            <!-- Page 4: Custom Theme -->
+            <div id="page-custom-theme" class="panel-page">
+                 <div class="setting-group">
+                    <label for="image-upload-input" class="setting-item">Upload Image</label>
+                    <input type="file" id="image-upload-input" accept="image/*" style="display: none;">
+                </div>
+                <div class="setting-item" data-action="remove-custom-bg"><span>Remove Background Image</span></div>
+            </div>
+
+            <!-- Page 5: Preferences -->
+            <div id="page-preferences" class="panel-page">
+                <div class="setting-group">
+                    <label for="position-preset">Position</label>
+                    <select id="position-preset">
+                        <option value="center">Center</option>
+                        <option value="top-left">Top Left</option>
+                        <option value="top-right">Top Right</option>
+                        <option value="bottom-left">Bottom Left</option>
+                        <option value="bottom-right">Bottom Right</option>
+                        <option value="top-center">Top Center</option>
+                        <option value="bottom-center">Bottom Center</option>
+                        <option value="custom">Custom (Drag when unlocked)</option>
+                    </select>
+                </div>
+                <div class="setting-item" data-action="toggle-snap">
+                    <span>Snap to Grid</span>
+                    <div id="snap-toggle" class="toggle-switch"><div class="knob"></div></div>
+                </div>
+                <div class="setting-group">
+                    <label>Size</label>
+                    <div class="size-controls">
+                        <button id="size-minus">-</button>
+                        <input type="range" id="size-slider" min="10" max="100" step="1">
+                        <button id="size-plus">+</button>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <label for="time-font">Time Font</label>
+                    <select id="time-font"></select>
+                    <label for="time-color">Time Color</label>
+                    <input type="color" id="time-color">
+                </div>
+                <div class="setting-group">
+                    <label for="date-font">Date Font</label>
+                    <select id="date-font"></select>
+                    <label for="date-color">Date Color</label>
+                    <input type="color" id="date-color">
+                </div>
+                <div class="setting-group">
+                    <label>Shadow</label>
+                    <div id="shadow-presets" class="button-group">
+                        <button data-preset="none">None</button>
+                        <button data-preset="soft">Soft</button>
+                        <button data-preset="hard">Hard</button>
+                    </div>
+                </div>
+                 <div class="setting-group">
+                    <label for="shadow-color">Shadow Color</label>
+                    <input type="color" id="shadow-color">
+                    <label for="shadow-blur">Shadow Blur</label>
+                    <input type="range" id="shadow-blur" min="0" max="50" step="1">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/main.js" type="module"></script>
+</body>
+</html>

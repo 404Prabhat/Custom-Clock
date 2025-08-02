@@ -1,0 +1,334 @@
+/* ==========================================================================
+   1. Core Variables & Theme Setup
+   ========================================================================== */
+:root {
+    --bg-color-light: #f0f0f0;
+    --text-color-light: #2c3e50;
+    --panel-bg-light: rgba(255, 255, 255, 0.9);
+    --panel-border-light: #ccc;
+    --item-hover-light: #e0e0e0;
+
+    --bg-color-dark: #000000;
+    --text-color-dark: #ecf0f1;
+    --panel-bg-dark: rgba(20, 20, 20, 0.9);
+    --panel-border-dark: #333;
+    --item-hover-dark: #3a3a3a;
+
+    --bg-color: var(--bg-color-dark);
+    --text-color: var(--text-color-dark);
+    --panel-bg: var(--panel-bg-dark);
+    --panel-border: var(--panel-border-dark);
+    --item-hover: var(--item-hover-dark);
+
+    --transition-speed: 0.3s;
+}
+
+.light-theme {
+    --bg-color: var(--bg-color-light);
+    --text-color: var(--text-color-light);
+    --panel-bg: var(--panel-bg-light);
+    --panel-border: var(--panel-border-light);
+    --item-hover: var(--item-hover-light);
+}
+
+/* ==========================================================================
+   2. Global Styles & Body
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    background-size: cover;
+    background-position: center;
+}
+
+/* ==========================================================================
+   3. Main App & Canvas Container
+   ========================================================================== */
+#background-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Behind the clock */
+    display: none;
+}
+
+#app-container {
+    position: relative;
+    z-index: 1; /* Above the canvas */
+    width: 100%;
+    height: 100%;
+}
+
+/* ==========================================================================
+   4. Clock Display & Responsive Sizing
+   ========================================================================== */
+#clock-wrapper {
+    position: absolute;
+    text-align: center;
+    user-select: none;
+    padding: 20px;
+    border-radius: 10px;
+    transition: border 0.3s ease, top 0.4s ease, left 0.4s ease, width 0.2s ease, transform 0.4s ease;
+
+    /* NEW: Responsive width using clamp() */
+    width: clamp(150px, 50vw, 1000px);
+}
+
+#clock-wrapper.edit-mode {
+    border: 2px dashed var(--text-color);
+    cursor: grab;
+}
+
+#clock-wrapper.dragging {
+    cursor: grabbing;
+    transition: none;
+}
+
+#time-display {
+    font-weight: 600;
+    line-height: 1;
+    /* NEW: Responsive font size using clamp() */
+    font-size: clamp(30px, 8vw, 150px);
+}
+
+#am-pm {
+    font-weight: 300;
+    margin-left: 0.2em;
+    /* NEW: Responsive font size using clamp() */
+    font-size: clamp(12px, 3vw, 40px);
+}
+
+#date-display {
+    font-weight: 300;
+    margin-top: 0.5em;
+    /* NEW: Responsive font size using clamp() */
+    font-size: clamp(14px, 2.5vw, 50px);
+}
+
+/* ==========================================================================
+   5. Settings Panel & UI Elements
+   ========================================================================== */
+#settings-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--panel-bg);
+    color: var(--text-color);
+    border: 1px solid var(--panel-border);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 24px;
+    backdrop-filter: blur(5px);
+    transition: all var(--transition-speed) ease;
+    z-index: 1000;
+}
+
+#settings-button:hover {
+    transform: scale(1.1);
+}
+
+#settings-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 320px;
+    max-width: 90vw;
+    height: 100%;
+    background: var(--panel-bg);
+    border-left: 1px solid var(--panel-border);
+    backdrop-filter: blur(10px);
+    transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+}
+
+#settings-panel.open {
+    right: 0;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid var(--panel-border);
+    flex-shrink: 0;
+}
+
+.panel-back-button {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.panel-title {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.panel-content {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.panel-page {
+    display: none;
+}
+
+.panel-page.active {
+    display: block;
+}
+
+.setting-item, .setting-group {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.setting-item {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.setting-item:hover {
+    background-color: var(--item-hover);
+}
+
+.setting-item .arrow {
+    font-size: 1.2em;
+}
+
+label.setting-item {
+    padding: 0;
+}
+
+.toggle-switch {
+    width: 50px;
+    height: 26px;
+    background: #ccc;
+    border-radius: 13px;
+    position: relative;
+    cursor: pointer;
+}
+
+.toggle-switch .knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+
+.toggle-switch.active {
+    background: #4CAF50;
+}
+
+.toggle-switch.active .knob {
+    transform: translateX(24px);
+}
+
+.setting-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.setting-group select, .setting-group input, .setting-group .button-group {
+    width: 100%;
+}
+
+.setting-group input[type="color"] {
+    height: 40px;
+    padding: 0 2px;
+}
+
+.button-group {
+    display: flex;
+}
+
+.button-group button {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid var(--panel-border);
+    background: none;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.button-group button:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.button-group button:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+.button-group button.active {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+.size-controls {
+    display: flex;
+    align-items: center;
+}
+
+.size-controls button {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border: 1px solid var(--panel-border);
+    background: var(--item-hover);
+}
+
+.size-controls input[type="range"] {
+    flex-grow: 1;
+    margin: 0 5px;
+}
+
+.sub-group {
+    display: none;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--panel-border);
+}
+
+.sub-group.visible {
+    display: block;
+}
+
+.menu-title {
+    padding: 20px 20px 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+    font-weight: 600;
+    border-bottom: 1px solid var(--panel-border);
+}
